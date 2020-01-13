@@ -1,4 +1,4 @@
-package logic;
+package RatingService.logic;
 
 public interface ReviewService {
 }

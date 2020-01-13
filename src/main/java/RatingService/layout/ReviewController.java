@@ -1,6 +1,6 @@
-package layout;
+package RatingService.layout;
 
-import logic.ReviewService;
+import RatingService.logic.ReviewService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

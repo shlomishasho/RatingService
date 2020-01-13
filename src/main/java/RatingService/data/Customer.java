@@ -1,4 +1,4 @@
-package data;
+package RatingService.data;
 
 public class Customer {
     private String email;
