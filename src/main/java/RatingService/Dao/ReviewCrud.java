@@ -3,45 +3,42 @@ package RatingService.Dao;
 import RatingService.data.Review;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.data.repository.query.Param;
 import reactor.core.publisher.Flux;
 
-public interface ReviewCrud extends ReactiveMongoRepository<Review,String> {
+public interface ReviewCrud extends ReactiveMongoRepository<Review, String> {
 
-    Flux<Review> findAllByProductId(
-            String productId);
+    //TODO: We maybe need to change the review timestamp type to Date instead of String
+    // As you can see on the methods below.
 
+    //By Product id
     Flux<Review> findAllByProductId(String productId, Sort by);
 
-    Flux<Review> findAllByProductIdAndReviewTimestampLessThan(
-            @Param("reviewTimestmap")String reviewTimestmap,
-            @Param("product.id") String productId,
-            Sort by);
+    Flux<Review> findAllByProductIdAndRatingLessThanEqual(String productId, int rating, Sort by);
 
-    Flux<Review> findAllByProductIdAndReviewTimestampGreaterThan(String productId, String filterValue, Sort by);
+    Flux<Review> findAllByProductIdAndRatingGreaterThanEqual(String productId, int rating, Sort by);
 
-    Flux<Review> findAllByProductIdAndRatingGreaterThan(
-            @Param("product.id") String productId,
-            @Param("rating") String rating,
-            Sort by);
+    Flux<Review> findAllByProductIdAndReviewTimestampBefore(String productId, String reviewTimestmap, Sort by);
 
-    Flux<Review> findAllByProductIdAndRatingLessThan(String productId, String filterValue, Sort by);
+    Flux<Review> findAllByProductIdAndReviewTimestampAfter(String productId, String reviewTimestmap, Sort by);
 
-
-    Flux<Review> findAllByRatingBetweenAndReviewTimestampGreaterThan(String minRatingInclusive, String maxRatingInclusice, String filterValue, Sort sortBy);
-
-
-    Flux<Review> findAllByRatingBetweenAndReviewTimestampLessThan(String minRatingInclusive, String maxRatingInclusice, String filterValue, Sort sortBy);
-
-    Flux<Review> findAllByRatingBetween(String minRatingInclusive, String maxRatingInclusice, String filterValue, Sort sortBy);
-
-    Flux<Review> findAllByCustomerEmailAndReviewTimestampLessThan(String email, String filterValue, Sort by);
-
-    Flux<Review> findAllByCustomerEmailAndReviewTimestampGreaterThan(String email, String filterValue, Sort by);
-
-    Flux<Review> findAllByCustomerEmailAndRatingLessThan(String email, String filterValue, Sort by);
-
-    Flux<Review> findAllByCustomerEmailAndRatingGreaterThan(String email, String filterValue, Sort by);
-
+    //By Customer email
     Flux<Review> findAllByCustomerEmail(String email, Sort by);
+
+    Flux<Review> findAllByCustomerEmailAndRatingLessThanEqual(String email, int rating, Sort by);
+
+    Flux<Review> findAllByCustomerEmailAndRatingGreaterThanEqual(String email, int rating, Sort by);
+
+    Flux<Review> findAllByCustomerEmailAndReviewTimestampBefore(String email, String reviewTimestmap, Sort by);
+
+    Flux<Review> findAllByCustomerEmailAndReviewTimestampAfter(String email, String reviewTimestmap, Sort by);
+
+    //Between rating
+    Flux<Review> findAllByRatingBetween(int minRatingInclusive, int maxRatingInclusive, Sort sortBy);
+
+    Flux<Review> findAllByRatingBetweenAndReviewTimestampBefore(int minRatingInclusive, int maxRatingInclusive, String filterValue, Sort sortBy);
+
+    Flux<Review> findAllByRatingBetweenAndReviewTimestampAfter(int minRatingInclusive, int maxRatingInclusive, String filterValue, Sort sortBy);
 }
+
+
+

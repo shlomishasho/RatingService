@@ -51,16 +51,16 @@ public class ReviewController {
                 .getReviewsByEmailAndFilter(filterType,filterValue,sortBy,email);
     }
 
-    @RequestMapping(path = "/reviews/byRatingBetween/{minRatingInclusive}/{maxRatingInclusice}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/reviews/byRatingBetween/{minRatingInclusive}/{maxRatingInclusive}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<Review> getReviewsBetweenRating(
-            @PathVariable("minRatingInclusive") String minRatingInclusive,
-            @PathVariable("maxRatingInclusice") String maxRatingInclusice,
+            @PathVariable("minRatingInclusive") int minRatingInclusive,
+            @PathVariable("maxRatingInclusive") int maxRatingInclusive,
             @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
             @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy){
         return this.reviewService
                 .validateFilterArgs(filterType,filterValue,sortBy)
-                .getReviewsBetweenRating(filterType,filterValue,sortBy,minRatingInclusive,maxRatingInclusice);
+                .getReviewsBetweenRating(filterType,filterValue,sortBy,minRatingInclusive,maxRatingInclusive);
     }
 
     @RequestMapping(path = "/reviews", method = RequestMethod.DELETE)
