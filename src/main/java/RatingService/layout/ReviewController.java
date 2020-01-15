@@ -2,14 +2,19 @@ package RatingService.layout;
 
 import RatingService.data.FilterTypes;
 import RatingService.data.Review;
+import RatingService.logic.Exceptions.FieldException;
+import RatingService.logic.Exceptions.MyDateParseException;
 import RatingService.logic.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 public class ReviewController {
@@ -71,6 +76,27 @@ public class ReviewController {
     public Mono<Void> cleanup(){
         return this.reviewService
                 .cleanup();
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleArgumentNotValid (FieldException e){
+        String message = e.getMessage();
+        if (message == null) {
+            message = "Arguments are not valid";
+        }
+        return Collections.singletonMap("error", message);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleWrongDateTypeFormat(MyDateParseException e){
+        String message = e.getMessage();
+        if (message == null) {
+            message = "Bad type format Found";
+        }
+        return Collections.singletonMap("error", message);
     }
 
 

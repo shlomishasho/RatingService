@@ -5,6 +5,7 @@ import RatingService.data.FilterTypes;
 import RatingService.data.Review;
 import RatingService.logic.Exceptions.CommonErrors;
 import RatingService.logic.Exceptions.FieldException;
+import RatingService.logic.Exceptions.MyDateParseException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -21,6 +22,7 @@ public class ReviewServiceImpl implements ReviewService {
     private ProductService productService;
     private ReviewerService reviewerService;
     private ReviewCrud reviewCrud;
+    private final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     public ReviewServiceImpl(Validator validator, ProductService productService, ReviewerService reviewerService, ReviewCrud reviewCrud) {
         this.validator = validator;
@@ -31,11 +33,19 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Mono<Review> create(Review review) {
-        return this.reviewCrud.save(review);
+        if(validate(review))
+            return this.reviewCrud.save(review);
+        throw new FieldException(CommonErrors.ARGS_ERR);
+    }
+
+    private boolean validate(Review review){
+        return validator.validate(review.getRating())&&
+                validator.validate(review.getCustomer().getEmail()) &&
+                validator.validate(review.getProduct().getId());
     }
 
     @Override
-    public Flux<Review> getReviewsByProductAndFilter(FilterTypes filterType, String filterValue, String sortBy, String productId)throws ParseException {
+    public Flux<Review> getReviewsByProductAndFilter(FilterTypes filterType, String filterValue, String sortBy, String productId){
         switch (filterType) {
             case ALL:
                 return this.productService.getAllReviews(sortBy,productId);
@@ -44,9 +54,9 @@ public class ReviewServiceImpl implements ReviewService {
             case BY_MIN_RATING:
                 return this.productService.getAllReviewsByMinRating(Integer.parseInt(filterValue), sortBy,productId);
             case BY_TIMESTAMP_FROM:
-                return this.productService.getAllReviewsByTimeFrom(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(filterValue), sortBy,productId);
+                return this.productService.getAllReviewsByTimeFrom(convertStringToTimeStamp(filterValue), sortBy,productId);
             case BY_TIMESTAMP_TO:
-                return this.productService.getAllReviewsByTimeTo(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(filterValue), sortBy,productId);
+                return this.productService.getAllReviewsByTimeTo(convertStringToTimeStamp(filterValue), sortBy,productId);
             default:
                 throw new FieldException(CommonErrors.NULL_FILTER_TYPE_ERR);
         }
@@ -54,7 +64,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Flux<Review> getReviewsByEmailAndFilter(FilterTypes filterType, String filterValue, String sortBy, String email) throws ParseException {
+    public Flux<Review> getReviewsByEmailAndFilter(FilterTypes filterType, String filterValue, String sortBy, String email) {
         switch (filterType) {
             case ALL:
                 return this.reviewerService.getAllReviews(sortBy,email);
@@ -63,25 +73,25 @@ public class ReviewServiceImpl implements ReviewService {
             case BY_MIN_RATING:
                 return this.reviewerService.getAllReviewsByMinRating(Integer.parseInt(filterValue), sortBy,email);
             case BY_TIMESTAMP_FROM:
-                return this.reviewerService.getAllReviewsByTimeFrom(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(filterValue), sortBy,email);
+                return this.reviewerService.getAllReviewsByTimeFrom(convertStringToTimeStamp(filterValue), sortBy,email);
             case BY_TIMESTAMP_TO:
-                return this.reviewerService.getAllReviewsByTimeTo(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(filterValue), sortBy,email);
+                return this.reviewerService.getAllReviewsByTimeTo(convertStringToTimeStamp(filterValue), sortBy,email);
             default:
                 throw new FieldException(CommonErrors.NULL_FILTER_TYPE_ERR);
         }
     }
 
     @Override
-    public Flux<Review> getReviewsBetweenRating(FilterTypes filterType, String filterValue, String sortBy, int minRatingInclusive, int maxRatingInclusice) throws ParseException {
+    public Flux<Review> getReviewsBetweenRating(FilterTypes filterType, String filterValue, String sortBy, int minRatingInclusive, int maxRatingInclusice)  {
         switch (filterType) {
             case BY_TIMESTAMP_FROM:
                 return this.reviewCrud.findAllByRatingBetweenAndReviewTimestampBefore
                         (minRatingInclusive,maxRatingInclusice,
-                                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(filterValue),
+                                convertStringToTimeStamp(filterValue),
                                 Sort.by(Sort.Direction.ASC,sortBy));
             case BY_TIMESTAMP_TO:
                 return this.reviewCrud.findAllByRatingBetweenAndReviewTimestampAfter(minRatingInclusive,maxRatingInclusice,
-                        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(filterValue),
+                        convertStringToTimeStamp(filterValue),
                         Sort.by(Sort.Direction.ASC,sortBy));
             default:
                 return this.reviewCrud.findAllByRatingBetween(minRatingInclusive,maxRatingInclusice, Sort.by(Sort.Direction.ASC,sortBy));
@@ -105,5 +115,13 @@ public class ReviewServiceImpl implements ReviewService {
             return this;
         }
         throw new FieldException(CommonErrors.FILTER_ARGS_ERR);
+    }
+
+    private Date convertStringToTimeStamp(String timeStr){
+        try {
+            return new SimpleDateFormat(DATE_FORMAT).parse(timeStr);
+        } catch (ParseException e) {
+            throw new MyDateParseException(timeStr);
+        }
     }
 }
