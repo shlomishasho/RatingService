@@ -18,27 +18,27 @@ public class ProductService implements ServicePattern{
 
     @Override
     public Flux<Review> getAllReviewsByTimeTo(String filterValue, String sortBy, String productId) {
-        return this.reviewCrud.findAllByProductIdAndReviewTimestampBefore(productId,filterValue, Sort.by(sortBy));
+        return this.reviewCrud.findAllByProductIdAndReviewTimestampBefore(productId,filterValue, Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
     public Flux<Review> getAllReviewsByTimeFrom(String filterValue, String sortBy, String productId) {
-        return this.reviewCrud.findAllByProductIdAndReviewTimestampAfter(productId,filterValue,Sort.by(sortBy));
+        return this.reviewCrud.findAllByProductIdAndReviewTimestampAfter(productId,filterValue,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
     public Flux<Review> getAllReviewsByMinRating(int filterValue, String sortBy, String productId) {
-        return this.reviewCrud.findAllByProductIdAndRatingGreaterThanEqual(productId,filterValue,Sort.by(sortBy));
+        return this.reviewCrud.findAllByProductIdAndRatingGreaterThanEqual(productId,filterValue,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
     public Flux<Review> getAllReviewsByMaxRating(int filterValue, String sortBy, String productId) {
-        return this.reviewCrud.findAllByProductIdAndRatingLessThanEqual(productId,filterValue,Sort.by(sortBy));
+        return this.reviewCrud.findAllByProductIdAndRatingLessThanEqual(productId,filterValue,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
     public Flux<Review> getAllReviews(String sortBy, String productId) {
-        return this.reviewCrud.findAllByProductId(productId,Sort.by(sortBy));
+        return this.reviewCrud.findAllByProductId(productId,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
 }

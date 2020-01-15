@@ -13,27 +13,27 @@ public class ReviewerService implements ServicePattern {
 
     @Override
     public Flux<Review> getAllReviewsByTimeTo(String filterValue, String sortBy, String email) {
-        return this.reviewCrud.findAllByCustomerEmailAndReviewTimestampBefore(email,filterValue, Sort.by(sortBy));
+        return this.reviewCrud.findAllByCustomerEmailAndReviewTimestampBefore(email,filterValue, Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
     public Flux<Review> getAllReviewsByTimeFrom(String filterValue, String sortBy, String email) {
-        return this.reviewCrud.findAllByCustomerEmailAndReviewTimestampAfter(email,filterValue,Sort.by(sortBy));
+        return this.reviewCrud.findAllByCustomerEmailAndReviewTimestampAfter(email,filterValue,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
     public Flux<Review> getAllReviewsByMinRating(int filterValue, String sortBy, String email) {
-        return this.reviewCrud.findAllByCustomerEmailAndRatingGreaterThanEqual(email,filterValue,Sort.by(sortBy));
+        return this.reviewCrud.findAllByCustomerEmailAndRatingGreaterThanEqual(email,filterValue,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
     public Flux<Review> getAllReviewsByMaxRating(int filterValue, String sortBy, String email) {
-        return this.reviewCrud.findAllByCustomerEmailAndRatingLessThanEqual(email,filterValue,Sort.by(sortBy));
+        return this.reviewCrud.findAllByCustomerEmailAndRatingLessThanEqual(email,filterValue,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
     public Flux<Review> getAllReviews(String sortBy, String email) {
-        return this.reviewCrud.findAllByCustomerEmail(email,Sort.by(sortBy));
+        return this.reviewCrud.findAllByCustomerEmail(email,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
 
