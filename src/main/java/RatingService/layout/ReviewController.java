@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.text.ParseException;
+
 @RestController
 public class ReviewController {
 
@@ -33,19 +35,21 @@ public class ReviewController {
             @PathVariable("productId") String productId,
             @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy) {
+            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy) throws ParseException {
         return this.reviewService
                 .validateFilterArgs(filterType,filterValue,sortBy)
                 .getReviewsByProductAndFilter(filterType,filterValue,sortBy,productId);
     }
 
 
-    @RequestMapping(path = "/reviews/byReviewer/{email}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/reviews/byReviewer/{email}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<Review> getReviewsByReviwerEmail(
             @PathVariable("email") String email,
             @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy){
+            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy) throws ParseException {
         return this.reviewService
                 .validateFilterArgs(filterType,filterValue,sortBy)
                 .getReviewsByEmailAndFilter(filterType,filterValue,sortBy,email);
@@ -57,10 +61,10 @@ public class ReviewController {
             @PathVariable("maxRatingInclusive") int maxRatingInclusive,
             @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy){
+            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy) throws ParseException {
         return this.reviewService
                 .validateFilterArgs(filterType,filterValue,sortBy)
-                .getReviewsBetweenRating(filterType,filterValue,sortBy,minRatingInclusive,maxRatingInclusive);
+                .getReviewsBetweenRating(filterType,filterValue,sortBy,minRatingInclusive-1,maxRatingInclusive+1);
     }
 
     @RequestMapping(path = "/reviews", method = RequestMethod.DELETE)

@@ -14,7 +14,7 @@ public class Review {
     private Customer customer;
     private Product product;
     private int rating;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Date reviewTimestamp = new Date();
     private Map <String,String> reviewContent;
 

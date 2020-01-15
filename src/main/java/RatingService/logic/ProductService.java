@@ -7,6 +7,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import java.util.Date;
+
 @Service
 public class ProductService implements ServicePattern{
     private ReviewCrud reviewCrud;
@@ -17,12 +19,12 @@ public class ProductService implements ServicePattern{
     }
 
     @Override
-    public Flux<Review> getAllReviewsByTimeTo(String filterValue, String sortBy, String productId) {
+    public Flux<Review> getAllReviewsByTimeTo(Date filterValue, String sortBy, String productId) {
         return this.reviewCrud.findAllByProductIdAndReviewTimestampBefore(productId,filterValue, Sort.by(Sort.Direction.ASC,sortBy));
     }
 
     @Override
-    public Flux<Review> getAllReviewsByTimeFrom(String filterValue, String sortBy, String productId) {
+    public Flux<Review> getAllReviewsByTimeFrom(Date filterValue, String sortBy, String productId) {
         return this.reviewCrud.findAllByProductIdAndReviewTimestampAfter(productId,filterValue,Sort.by(Sort.Direction.ASC,sortBy));
     }
 
