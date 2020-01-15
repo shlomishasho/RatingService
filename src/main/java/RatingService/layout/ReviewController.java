@@ -40,7 +40,7 @@ public class ReviewController {
             @PathVariable("productId") String productId,
             @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy) throws ParseException {
+            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy)  {
         return this.reviewService
                 .validateFilterArgs(filterType,filterValue,sortBy)
                 .getReviewsByProductAndFilter(filterType,filterValue,sortBy,productId);
@@ -54,7 +54,7 @@ public class ReviewController {
             @PathVariable("email") String email,
             @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy) throws ParseException {
+            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy)  {
         return this.reviewService
                 .validateFilterArgs(filterType,filterValue,sortBy)
                 .getReviewsByEmailAndFilter(filterType,filterValue,sortBy,email);
@@ -66,7 +66,7 @@ public class ReviewController {
             @PathVariable("maxRatingInclusive") int maxRatingInclusive,
             @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
-            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy) throws ParseException {
+            @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy)  {
         return this.reviewService
                 .validateFilterArgs(filterType,filterValue,sortBy)
                 .getReviewsBetweenRating(filterType,filterValue,sortBy,minRatingInclusive-1,maxRatingInclusive+1);

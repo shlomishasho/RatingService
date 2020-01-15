@@ -12,11 +12,11 @@ public interface ReviewService {
 
     ReviewService validateFilterArgs(FilterTypes filterType, String filterValue, String sortAttr);
 
-    Flux<Review> getReviewsByProductAndFilter(FilterTypes filterType, String filterValue, String sortBy, String productId) throws ParseException;
+    Flux<Review> getReviewsByProductAndFilter(FilterTypes filterType, String filterValue, String sortBy, String productId) ;
 
-    Flux<Review> getReviewsBetweenRating(FilterTypes filterType, String filterValue, String sortBy, int minRatingInclusive, int maxRatingInclusice) throws ParseException;
+    Flux<Review> getReviewsBetweenRating(FilterTypes filterType, String filterValue, String sortBy, int minRatingInclusive, int maxRatingInclusice) ;
 
-    Flux<Review> getReviewsByEmailAndFilter(FilterTypes filterType, String filterValue, String sortBy, String email) throws ParseException;
+    Flux<Review> getReviewsByEmailAndFilter(FilterTypes filterType, String filterValue, String sortBy, String email) ;
 
     Mono<Void> cleanup();
 }
