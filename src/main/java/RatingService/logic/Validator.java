@@ -1,5 +1,6 @@
 package RatingService.logic;
 
+import RatingService.data.EnhancedFilterTypes;
 import RatingService.data.FilterTypes;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,7 @@ public class Validator {
     }
 
 
-
-
+    public boolean validate(EnhancedFilterTypes filterType) {
+        return filterType != null;
+    }
 }

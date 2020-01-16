@@ -1,6 +1,7 @@
 package RatingService.logic;
 
 import RatingService.Dao.ReviewCrud;
+import RatingService.data.EnhancedFilterTypes;
 import RatingService.data.FilterTypes;
 import RatingService.data.Review;
 import RatingService.logic.Exceptions.CommonErrors;
@@ -45,7 +46,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Flux<Review> getReviewsByProductAndFilter(FilterTypes filterType, String filterValue, String sortBy, String productId){
+    public Flux<Review> getReviewsByProductAndFilter(EnhancedFilterTypes filterType, String filterValue, String sortBy, String productId){
         switch (filterType) {
             case ALL:
                 return this.productService.getAllReviews(sortBy,productId);
@@ -64,7 +65,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Flux<Review> getReviewsByEmailAndFilter(FilterTypes filterType, String filterValue, String sortBy, String email) {
+    public Flux<Review> getReviewsByEmailAndFilter(EnhancedFilterTypes filterType, String filterValue, String sortBy, String email) {
         switch (filterType) {
             case ALL:
                 return this.reviewerService.getAllReviews(sortBy,email);
@@ -110,6 +111,20 @@ public class ReviewServiceImpl implements ReviewService {
         if (allFieldsValid) {
             boolean isFilterValueValid = validator.validate(filterValue);
             if (!filterType.equals(FilterTypes.ALL) && !isFilterValueValid)
+                throw new FieldException(CommonErrors.FILTER_VALUE_ERR);
+
+            return this;
+        }
+        throw new FieldException(CommonErrors.FILTER_ARGS_ERR);
+    }
+
+    @Override
+    public ReviewService validateFilterArgs(EnhancedFilterTypes filterType, String filterValue, String sortAttr) {
+        boolean allFieldsValid = validator.validate(filterType)
+                && validator.validate(sortAttr);
+        if (allFieldsValid) {
+            boolean isFilterValueValid = validator.validate(filterValue);
+            if (!filterType.equals(EnhancedFilterTypes.ALL) && !isFilterValueValid)
                 throw new FieldException(CommonErrors.FILTER_VALUE_ERR);
 
             return this;

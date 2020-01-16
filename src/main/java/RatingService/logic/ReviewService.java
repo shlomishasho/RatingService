@@ -1,5 +1,6 @@
 package RatingService.logic;
 
+import RatingService.data.EnhancedFilterTypes;
 import RatingService.data.FilterTypes;
 import RatingService.data.Review;
 import reactor.core.publisher.Flux;
@@ -12,11 +13,13 @@ public interface ReviewService {
 
     ReviewService validateFilterArgs(FilterTypes filterType, String filterValue, String sortAttr);
 
-    Flux<Review> getReviewsByProductAndFilter(FilterTypes filterType, String filterValue, String sortBy, String productId) ;
+    ReviewService validateFilterArgs(EnhancedFilterTypes filterType, String filterValue, String sortAttr);
+
+    Flux<Review> getReviewsByProductAndFilter(EnhancedFilterTypes filterType, String filterValue, String sortBy, String productId) ;
+
+    Flux<Review> getReviewsByEmailAndFilter(EnhancedFilterTypes filterType, String filterValue, String sortBy, String email) ;
 
     Flux<Review> getReviewsBetweenRating(FilterTypes filterType, String filterValue, String sortBy, int minRatingInclusive, int maxRatingInclusice) ;
-
-    Flux<Review> getReviewsByEmailAndFilter(FilterTypes filterType, String filterValue, String sortBy, String email) ;
 
     Mono<Void> cleanup();
 }

@@ -1,5 +1,6 @@
 package RatingService.layout;
 
+import RatingService.data.EnhancedFilterTypes;
 import RatingService.data.FilterTypes;
 import RatingService.data.Review;
 import RatingService.logic.Exceptions.FieldException;
@@ -38,7 +39,7 @@ public class ReviewController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<Review> getReviewsByProductId(
             @PathVariable("productId") String productId,
-            @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
+            @RequestParam(name = "filterType", required = false, defaultValue = "all") EnhancedFilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
             @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy)  {
         return this.reviewService
@@ -52,7 +53,7 @@ public class ReviewController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<Review> getReviewsByReviwerEmail(
             @PathVariable("email") String email,
-            @RequestParam(name = "filterType", required = false, defaultValue = "all") FilterTypes filterType,
+            @RequestParam(name = "filterType", required = false, defaultValue = "all") EnhancedFilterTypes filterType,
             @RequestParam(name = "filterValue", required = false, defaultValue = "") String filterValue,
             @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy)  {
         return this.reviewService
@@ -60,7 +61,9 @@ public class ReviewController {
                 .getReviewsByEmailAndFilter(filterType,filterValue,sortBy,email);
     }
 
-    @RequestMapping(path = "/reviews/byRatingBetween/{minRatingInclusive}/{maxRatingInclusive}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/reviews/byRatingBetween/{minRatingInclusive}/{maxRatingInclusive}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<Review> getReviewsBetweenRating(
             @PathVariable("minRatingInclusive") int minRatingInclusive,
             @PathVariable("maxRatingInclusive") int maxRatingInclusive,
