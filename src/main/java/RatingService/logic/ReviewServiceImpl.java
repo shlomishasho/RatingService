@@ -83,19 +83,19 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Flux<Review> getReviewsBetweenRating(FilterTypes filterType, String filterValue, String sortBy, int minRatingInclusive, int maxRatingInclusice)  {
+    public Flux<Review> getReviewsBetweenRating(FilterTypes filterType, String filterValue, String sortBy, int minRatingInclusive, int maxRatingInclusive)  {
         switch (filterType) {
             case BY_TIMESTAMP_FROM:
-                return this.reviewCrud.findAllByRatingBetweenAndReviewTimestampBefore
-                        (minRatingInclusive,maxRatingInclusice,
+                return this.reviewCrud.findAllByRatingBetweenAndReviewTimestampAfter
+                        (minRatingInclusive,maxRatingInclusive,
                                 convertStringToTimeStamp(filterValue),
                                 Sort.by(Sort.Direction.ASC,sortBy));
             case BY_TIMESTAMP_TO:
-                return this.reviewCrud.findAllByRatingBetweenAndReviewTimestampAfter(minRatingInclusive,maxRatingInclusice,
+                return this.reviewCrud.findAllByRatingBetweenAndReviewTimestampBefore(minRatingInclusive,maxRatingInclusive,
                         convertStringToTimeStamp(filterValue),
                         Sort.by(Sort.Direction.ASC,sortBy));
             default:
-                return this.reviewCrud.findAllByRatingBetween(minRatingInclusive,maxRatingInclusice, Sort.by(Sort.Direction.ASC,sortBy));
+                return this.reviewCrud.findAllByRatingBetween(minRatingInclusive,maxRatingInclusive, Sort.by(Sort.Direction.ASC,sortBy));
         }
     }
 
